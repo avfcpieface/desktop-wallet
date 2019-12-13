@@ -11,6 +11,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
+const pluginRendererConfig = require('./webpack.plugin-renderer.config')
 
 let electronProcess = null
 let manualRestart = false
@@ -74,6 +75,45 @@ function startRenderer () {
     )
 
     server.listen(9080)
+  })
+}
+
+function startPluginRenderer () {
+  return new Promise((resolve, reject) => {
+    pluginRendererConfig.entry['plugin-renderer'] = [path.join(__dirname, 'dev-client')].concat(pluginRendererConfig.entry['plugin-renderer'])
+    pluginRendererConfig.mode = 'development'
+    const compiler = webpack(pluginRendererConfig)
+    hotMiddleware = webpackHotMiddleware(compiler, {
+      log: false,
+      heartbeat: 2500
+    })
+
+    compiler.hooks.compilation.tap('compilation', compilation => {
+      compilation.hooks.htmlWebpackPluginAfterEmit.tapAsync('html-webpack-plugin-after-emit', (data, cb) => {
+        hotMiddleware.publish({ action: 'reload' })
+        cb()
+      })
+    })
+
+    compiler.hooks.done.tap('done', stats => {
+      logStats('Plugin Renderer', stats)
+    })
+
+    const server = new WebpackDevServer(
+      compiler,
+      {
+        contentBase: path.join(__dirname, '../'),
+        quiet: true,
+        before (app, ctx) {
+          app.use(hotMiddleware)
+          ctx.middleware.waitUntilValid(() => {
+            resolve()
+          })
+        }
+      }
+    )
+
+    server.listen(9081)
   })
 }
 
@@ -166,7 +206,7 @@ function greeting () {
 function init () {
   greeting()
 
-  Promise.all([startRenderer(), startMain()])
+  Promise.all([startRenderer(), startPluginRenderer(), startMain()])
     .then(() => {
       startElectron()
     })

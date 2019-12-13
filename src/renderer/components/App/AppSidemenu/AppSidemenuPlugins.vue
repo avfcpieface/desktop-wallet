@@ -33,6 +33,8 @@
 import chunk from 'lodash/chunk'
 import { MenuOptions, MenuOptionsItem } from '@/components/Menu'
 
+import { remote, ipcRenderer } from 'electron'
+
 export default {
   name: 'AppSidemenuPlugins',
 
@@ -70,7 +72,13 @@ export default {
   methods: {
     navigateToRoute (routeName) {
       this.$emit('close')
-      this.$router.push({ name: routeName })
+      // this.$router.push({ name: routeName })
+      // this.$router.push('http://localhost:9081/ark-explorer')
+      ipcRenderer.on('plugin:navigateToRoute', (event, arg) => {
+        console.log('received plugin:navigateToRoute', event, arg)
+      })
+      remote.getCurrentWindow().webContents.send('plugin:navigateToRoute', { name: routeName })
+      // ipcMain.sendSync('plugin:navigateToRoute', { name: routeName })
     },
 
     emitClose () {

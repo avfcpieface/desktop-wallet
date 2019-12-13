@@ -52,8 +52,11 @@
             />
           </div>
 
+          <PluginContainer v-if="true" />
+
           <!-- Updating the maximum number of routes to keep alive means that Vue will destroy the rest of cached route components -->
           <KeepAlive
+            v-else
             :include="keepAliveRoutes"
             :max="keepAliveRoutes.length"
           >
@@ -110,6 +113,7 @@ import AlertMessage from '@/components/AlertMessage'
 import { TransactionModal } from '@/components/Transaction'
 import config from '@config'
 import URIHandler from '@/services/uri-handler'
+import PluginContainer from '@/components/Plugin/PluginContainer'
 
 var { remote, ipcRenderer } = require('electron')
 const Menu = remote.Menu
@@ -122,7 +126,8 @@ export default {
     AppIntro,
     AppSidemenu,
     AlertMessage,
-    TransactionModal
+    TransactionModal,
+    PluginContainer
   },
 
   data: vm => ({

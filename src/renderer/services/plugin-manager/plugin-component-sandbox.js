@@ -57,6 +57,13 @@ export class PluginComponentSandbox {
       return
     }
 
+    // this.compiled.template = `<webview plugins>
+    //   ${this.compiled.template}
+    // </webview>`
+    this.compiled.template = `<webview webpreferences="allowRunningInsecureContent">
+      <meta http-equiv="Content-Security-Policy" content="*">
+      ${this.compiled.template}
+    </webview>`
     const compiledTemplate = compileTemplate(this.pluginVM, this.compiled.template)
 
     const lazyComponent = Object.assign(compiledTemplate, this.compiled)
