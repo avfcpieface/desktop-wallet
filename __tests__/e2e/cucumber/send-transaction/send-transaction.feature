@@ -43,7 +43,7 @@
    
   Scenario: Fail to send transaction (insufficient balance)
     Given the user has launched the ARK Desktop Wallet
-    And the user has selected a wallet with a balance < 1
+    And the user has selected a wallet with a balance 1
     And the user has selected 'Send'
     And the user enters a valid token amount of '2'
     Then the user should see the error 'The balance is too low'
