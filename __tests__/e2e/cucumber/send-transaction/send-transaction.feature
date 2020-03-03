@@ -74,7 +74,7 @@
 
   Scenario: Fail to send transaction (fail to decrypt passphrase)
     Given the user has launched the ARK Desktop Wallet
-   And the user has selected a wallet with an ecrypted passphrase
+    And the user has selected a wallet with an ecrypted passphrase
     And the wallet has a balance > 2
     And the user has selected 'Send'
     When the user enters a valid recipient address
