@@ -54,8 +54,7 @@
     And the user has selected a wallet with a balance 
     And the user has selected 'Send'
     When the user enters an invalid passphrase
-    Then the user should see the error 'The 'Passphrase' does not match the
-    'address'' 
+    Then the user should see the error 'The 'Passphrase' does not match the 'address'' 
     And the user cannot select 'Next'
     And the user confirms the transaction
     Then the transaction will be broadcast to the network
