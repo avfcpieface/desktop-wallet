@@ -46,4 +46,4 @@
     And the user enters a valid token amount of '3'
     Then the user should see the error 'The balance is too low'
     And the user cannot select 'Next'
-    And the modal closes
+   
