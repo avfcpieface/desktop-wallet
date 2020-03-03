@@ -3,7 +3,8 @@
     
   Scenario: Successfully send a transaction w/ Single Passphrase
     Given the user has launched the ARK Desktop Wallet
-    And the user has selected a wallet with a balance > 2
+    And the user has selected a wallet with a single passphrase  
+    And the wallet has a balance > 2
     And the user has selected 'Send'
     When the user enters a valid recipient address
     And the user enters a valid token amount of '1'
@@ -15,7 +16,8 @@
 
   Scenario: Successfully send a transaction w/ Second Passphrase
     Given the user has launched the ARK Desktop Wallet
-    And the user has selected a wallet with a balance > 2
+    And the user has selected a wallet with a second passphrase
+    And the wallet has a balance > 2
     And the user has selected 'Send'
     When the user enters a valid recipient address
     And the user enters a valid token amount of '1'
@@ -28,7 +30,8 @@
 
   Scenario: Successfully send a transaction w/ Encrypted Passphrase
     Given the user has launched the ARK Desktop Wallet
-    And the user has selected a wallet with a balance > 2
+    And the user has selected a wallet with an ecrypted passphrase
+    And the wallet has a balance > 2
     And the user has selected 'Send'
     When the user enters a valid recipient address
     And the user enters a valid token amount of '1'
@@ -40,10 +43,21 @@
    
   Scenario: Fail to send transaction (insufficient balance)
     Given the user has launched the ARK Desktop Wallet
-    And the user has selected a wallet with a balance < 2
+    And the user has selected a wallet with a balance < 1
     And the user has selected 'Send'
-    When the user enters a valid recipient address
-    And the user enters a valid token amount of '3'
+    And the user enters a valid token amount of '2'
     Then the user should see the error 'The balance is too low'
     And the user cannot select 'Next'
    
+  Scenario: Fail to send transaction (passphrase incorrect)
+    Given the user has launched the ARK Desktop Wallet
+    And the user has selected a wallet with a balance 
+    And the user has selected 'Send'
+    When the user enters an invalid passphrase
+    Then the user should see the error 'The 'Passphrase' does not match the
+    'address'' 
+    And the user cannot select 'Next'
+    And the user confirms the transaction
+    Then the transaction will be broadcast to the network
+    And the user will see a 'Your transaction was succesfully sent' message
+    And the sent token amount is subtracted from the overall balance
