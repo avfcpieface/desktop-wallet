@@ -76,4 +76,15 @@
     And the user selects 'Next'
     Then the user should see the error 'Failed to decrypt passphrase'
     
+  Scenario: Fail to send transaction (invalid recipient address)
+    Given the user has selected a wallet with a single passphrase
+    And the wallet has a balance > 2
+    And the user has selected 'Send'
+    When the user enters an invalid recipient address
+    And the user enters a valid token amount of '1'
+    And the user enters a valid passphrase
+    And the user confirms the transaction
+    Then the user will see the error 'The address is not valid'
+    And the user cannot select 'Next'
 
+  
