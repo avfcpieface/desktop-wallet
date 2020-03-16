@@ -1,0 +1,1 @@
+Feature: Delegate Registration
